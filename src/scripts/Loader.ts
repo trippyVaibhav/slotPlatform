@@ -8,6 +8,7 @@ import "pixi-spine";
 import FFC from 'fontfaceobserver';
 import { BackgroundGraphic, BackgroundSprite, Background } from './Background';
 import { log } from 'console';
+import { fetchDataAndGroup } from './apiCalls';
 // import { BackgroundGraphic } from './Background';
 
 export class Loader {
@@ -28,9 +29,8 @@ export class Loader {
 
         const Background = PIXI.Sprite.from(staticData.Background);
 
-        const background = new BackgroundSprite(Background.texture,window.innerWidth, window.innerHeight);
-        background.width = window.innerWidth;
-        background.height = window.innerHeight;
+        const background = new BackgroundSprite(Background.texture,window.innerWidth,window.innerHeight);
+       
         container.addChild(background);
 
         //loaderbar
@@ -39,7 +39,7 @@ export class Loader {
         const logo = PIXI.Sprite.from(staticData.logoURL);
 
         logo.anchor.set(0.5,1);
-        logo.scale.set(0.5)
+        logo.scale.set(1)
         logo.x = config.logicalWidth / 2 - logo.width/2;
         logo.y = config.logicalHeight / 2;
 
@@ -50,7 +50,7 @@ export class Loader {
             width: (config.logicalWidth * 0.4),
             height: 20,
             x: config.logicalWidth / 2,
-            y: config.logicalHeight / 2 + 20
+            y: config.logicalHeight / 2 + 100
         };
 
 
@@ -98,29 +98,26 @@ export class Loader {
             for (let key in this.resources) {
                 this.loader.add(key, this.resources[key].default);
             }
-
+            
             this.loader.load((loader, res) => {
                 Globals.resources = res;
-
-
+                
+                
                 const fontArray: any = [];
                 fontData.forEach((fontName: any) => {
                     fontArray.push(new FFC(fontName).load());
-
+                    
                 });
-
+                
                 if (fontArray.length == 0)
+                resolve(0);
+            else {
+                Promise.all(fontArray).then(() => {
                     resolve(0);
-                else {
-                    Promise.all(fontArray).then(() => {
-                        resolve(0);
-                    });
-                }
-
-                // console.log(fontArray);
-
-
-            });
+                });
+            }
+            // console.log(fontArray);
+        });
         });
     }
 

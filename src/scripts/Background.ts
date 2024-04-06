@@ -1,3 +1,4 @@
+
 import * as PIXI from "pixi.js";
 import { Resource } from "pixi.js";
 import { config } from "./appConfig";
@@ -88,16 +89,11 @@ export class BackgroundSprite extends PIXI.Sprite {
         // if (height != null)
         //     this.defaultProperties.height = height;
 
-        this.width =  window.innerWidth*50;
-        this.height = window.innerHeight*50;
+        this.width =  window.innerWidth;
+        this.height = window.innerHeight;
 
-        this.position.x = - window.innerWidth*2;
-        this.position.y = - window.innerHeight*2;
-
-        console.log(config.minScaleFactor);
-        
-
-        
+        this.position.x = 0;
+        this.position.y = 0;
     }
 }
 

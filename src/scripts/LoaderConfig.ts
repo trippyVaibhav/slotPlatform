@@ -1,42 +1,56 @@
 import { Background } from './Background';
 export const LoaderConfig = {
-    backGround : require("../sprites/Gamesprite/BG.png"),
-    Bottom : require("../sprites/Bottom.png"),
-    Sprint : require("../sprites/Gamesprite/PlayButton.png"),
-    Char0 :  require("../sprites/Gamesprite/Char1.png"),
-    Char1 :  require("../sprites/Gamesprite/Char2.png"),
-    Char2 :  require("../sprites/Gamesprite/Char3.png"),
-    Char3 :  require("../sprites/Gamesprite/Char4.png"),
-    Char4 :  require("../sprites/Gamesprite/Char5.png"),
-    Char5 :  require("../sprites/Gamesprite/Char6.png"),
-    Char6 :  require("../sprites/Gamesprite/Char7.png"),
-    Char7 :  require("../sprites/Gamesprite/Char8.png"),
-    Char8 :  require("../sprites/Gamesprite/Char9.png"),
-    Char9 :  require("../sprites/Gamesprite/Char10.png"),
-    arrL : require("../sprites/Gamesprite/LeftButton.png"),
-    arrR : require("../sprites/Gamesprite/RightButton.png"),
-    frame : require("../sprites/Gamesprite/Frame.png"),
-    whiteBG : require("../sprites/whiteBG.png"),
-    ButtonBg  :require("../sprites/Gamesprite/ButtonBG.png"),
-    ButtonBg1  :require("../sprites/Gamesprite/ButtonBG1.png"),
-    ButtonBg2  :require("../sprites/Gamesprite/ButtonBG2.png"),
-    symbolSlot  :require("../sprites/symbolSlot.png"),
+    Frame : require("../sprites/SlotFrame.png"),
+    Slot0 : require("../sprites/Slot1.png"),
+    Slot1 : require("../sprites/Slot2.png"),
+    Slot2 : require("../sprites/Slot3.png"),
+    Slot3 : require("../sprites/Slot4.png"),
+    loginPage : require("../sprites/LoginPage.png"),
+    loginBtn : require("../sprites/LoginBtn.png"),
+    InputField : require("../sprites/InputField.png"),
+    uiSetup : require("../sprites/UI Setup.png"),
+    settingBtn : require("../sprites/settingBtn.png"),
+    logo : require("../sprites/Logo.png"),
+    avUi : require("../sprites/AvtarUI.png"),
 
+    Bingo : require("../sprites/Bingo.png"),
+    Casino : require("../sprites/Casino.png"),
+    Fish : require("../sprites/Fish.png"),
+    Jackpot : require("../sprites/Jackpot.png"),
+    SpinWheel : require("../sprites/Spin Wheel.png"),
+    Slot: require("../sprites/Slot.png"),
 
+    favHolder : require("../sprites/FavHolder.png"),
+    favHolder1 : require("../sprites/FavHolder1.png"),
 
+    isFav : require("../sprites/FavHolder3.png"),
+    isNotFav : require("../sprites/FavHolder2.png"),
 
-
-
+    switcherOn : require("../sprites/SwitchOn.png"),
+    switcherOff : require("../sprites/SwitchOff.png"),
     
+    Arrow : require("../sprites/Arrow.png"),
+
+    upperLFrame  : require("../sprites/upperLFrame.png"),
+    upperRFrame  : require("../sprites/upperRFrame.png"),
+    bottomLFrame  : require("../sprites/bottomL.png"),
+    bottomRFrame  : require("../sprites/bottomR.png"),
+    BottmFrame : require("../sprites/BottmFrame.png"),
+    upperFrame : require("../sprites/upperFrame.png"),
+    UpperMiddleFrame : require("../sprites/UpperMIddleFrame.png"),
+    BottmMiddle: require("../sprites/BottmMiddle.png"),
+
+    HOT : require("../sprites/Hot.png"),
+    NEW : require("../sprites/New.png"),
+
+
 
 };
 
 export const staticData = {
     // logoURL: "https://cccdn.b-cdn.net/1584464368856.png",
-    logoURL: require("/static/logo.png").default,
+    logoURL: require("/static/Logo.png").default,
     Background: require("/static/Background.png").default,
-
-
 };
 
 export const fontData = ["Inter"];
@@ -44,9 +58,7 @@ export const fontData = ["Inter"];
 
 
 export const LoaderSoundConfig: any = {
-bgMusic : require("../sounds/BgMusic.mp3"),
 onSpin : require("../sounds/onStartCoin.mp3"),
-onWin : require("../sounds/winMusic.mp3"),
 };
 
 export const preloaderConfig = {

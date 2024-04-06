@@ -1,14 +1,17 @@
 import * as PIXI from "pixi.js";
 import { CalculateScaleFactor, config } from "./appConfig";
-import { Globals, cookieValues, getCookie, setCookie } from "./Globals";
+
 // import { onResizeFunction } from "./HtmlHandler";
 import { Loader } from "./Loader";
 import { MainScene } from "./MainScene";
 import { Axios } from 'axios';
 import { MyEmitter } from "./MyEmitter";
 import { SceneManager } from "./SceneManager";
-import { getPlayerCredit } from "./ApiPasser";
+
 import { log } from "console";
+import { Globals } from "./Globals";
+import { LoginScene } from "./LoginPage";
+import { fetchDataAndGroup } from "./apiCalls";
 // import { Loader } from "./Loader";
 // import { SceneManager } from "./SceneManager";
 // import { MainScene } from "./MainScene";
@@ -21,6 +24,7 @@ export class App {
 
 	constructor() {
 		// create canvas
+        fetchDataAndGroup();
 
 		PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
 
@@ -50,7 +54,6 @@ export class App {
 			// 	document.body.removeChild(this.app.view);
             //     // console.log("Removed Canvas from DOM");
 			// }
-			
 			CalculateScaleFactor();
 			document.body.removeChild(this.app.view);
 
@@ -85,40 +88,31 @@ export class App {
 
 		const loader = new Loader(this.app.loader, loaderContainer);
 		loader.preload().then(() => {
+
 			loader.preloadSounds(() => {
 				setTimeout(() => {
 					loaderContainer.destroy();
-
+					
 					SceneManager.instance!.start(new MainScene());
 				}, 1000);
 			});
 		});
 	
-	   const cookieValue =  getCookie("userName");
-	   const tokenValue =  getCookie("userToken");
-
-	   if(cookieValue)
-	   {
-		   cookieValues.userName = cookieValue;
-	   }
-	   if(tokenValue)
-	   {
-		cookieValues.token = tokenValue;
-
-	   }
-
+		
+		
 		this.tabChange();
 		document.body.appendChild(this.app.view);
 	}
+
+
 
 	tabChange() {
 		document.addEventListener("visibilitychange", (event) => {
 		if (document.hidden) {
 			Globals.emitter?.Call("pause");
-			Globals.isVisible = false;
+
 		} else {
 			Globals.emitter?.Call("resume");
-			Globals.isVisible = true;
 		}
 		});
 	}

@@ -1,45 +1,38 @@
-import { Container, DisplayObject, Graphics, Resource, Texture } from "pixi.js";
+import { Container, DisplayObject, Graphics, Resource, Sprite, Texture } from "pixi.js";
 import { config } from "./appConfig";
-import { AnimatedBackgroundSprite, BackgroundGraphic, BackgroundSprite } from "./Background";
+import { AnimatedBackgroundSprite, Background, BackgroundGraphic, BackgroundSprite } from "./Background";
 import { Globals } from "./Globals";
+import { staticData } from "./LoaderConfig";
 
 export abstract class Scene {
 
 
     private sceneContainer: Container;
-    private fullBackground: number  = 0x123123;
+    private fullBackground: number  = 0x000000;
 
 
     mainContainer: Container;
     // mainBackground: BackgroundGraphic;
-    private mainBackground: BackgroundGraphic | BackgroundSprite;
+    private mainBackground!: BackgroundGraphic | BackgroundSprite;
 
 
-    constructor() {
+    constructor(BackGroundS : Sprite | undefined , BackGroundG : Graphics | undefined) {
         this.sceneContainer = new Container();
-
- 
         
-       
-        
-
         this.mainContainer = new Container();
-
         this.resetMainContainer();
+        
+        // this.mainBackground = new BackgroundGraphic(config.logicalWidth, config.logicalHeight, this.fullBackground);
+   
+        if(BackGroundS)
+        this.mainBackground = new BackgroundSprite(BackGroundS.texture,window.innerWidth,window.innerHeight);
+        else
+        this.mainBackground = new BackgroundGraphic(window.innerWidth,window.innerHeight,BackGroundG);
+
+        this.addChildToFullScene(this.mainBackground);
+
 
         this.sceneContainer.addChild(this.mainContainer);
-
-
-
-        // if (typeof mainBackgroundColor === "number") {
-            // this.mainBackground = new BackgroundGraphic(config.logicalWidth, config.logicalHeight, mainBackgroundColor);
-            
-            // } 
-            // else {
-                this.mainBackground = new BackgroundSprite(Globals.resources.backGround.texture, config.logicalWidth, config.logicalHeight);
-                this.addChildToFullScene(this.mainBackground);
-        // }
-
 
 
         // const mask = new Graphics();
@@ -66,7 +59,7 @@ export abstract class Scene {
     }
     resize(): void {
         this.resetMainContainer();
-        // this.fullBackground.resetBg(window.innerWidth, window.innerHeight);
+        this.mainBackground.resetBg(window.innerWidth, window.innerHeight);
     }
 
     initScene(container: Container) {
