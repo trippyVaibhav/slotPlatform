@@ -47,6 +47,8 @@ export function fetchDataAndGroup(): Promise<{ [gameName: string]: GameData[][] 
         // resolve(results);
         Globals.gameData = results;
         console.log(results);
+        Globals.gameApiLoaded =  true;
+        Globals.emitter?.Call("CallPageInit");
         })
             .catch(error => {
                 reject(error);

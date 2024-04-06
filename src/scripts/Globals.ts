@@ -14,6 +14,7 @@ type globalDataType = {
 
   App: App | undefined,
   gameData : GameData[][] | undefined,
+  gameApiLoaded : boolean ;
 }
 
 export const Globals: globalDataType = {
@@ -27,6 +28,7 @@ export const Globals: globalDataType = {
   App: undefined,
   soundResources: {},
   gameData : undefined,
+  gameApiLoaded : false,
 };
 
 export const gameFrameData = {

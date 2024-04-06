@@ -7,6 +7,7 @@ import { config, minScaleFactor } from "./appConfig";
 import { ButtonSlider, gameClassManager } from "./Slider";
 import { UiContainer } from "./Ui";
 import { Easing, Tween } from "@tweenjs/tween.js";
+import { Spine } from "pixi-spine";
 
 
 export class MainScene extends Scene {
@@ -14,14 +15,19 @@ export class MainScene extends Scene {
 	rightArrow !: Sprite;
 	leftArrow !: Sprite;
 	uiContainer : UiContainer;
-	gameClassManager : gameClassManager;
+	gameClassManager !: gameClassManager;
 
 	constructor() {
 		const Background = Sprite.from(staticData.Background);
 		super(Background,undefined);
 
-		this.gameClassManager = new gameClassManager();
-		this.mainContainer.addChild(this.gameClassManager);
+		if(Globals.gameApiLoaded)
+		{
+			this.gameClassManager = new gameClassManager();
+			this.mainContainer.addChild(this.gameClassManager);
+		}
+		else
+		this.createLoadSpinner();
 
 		this.uiContainer = new UiContainer();
 		this.mainContainer.addChild(this.uiContainer);
@@ -29,6 +35,47 @@ export class MainScene extends Scene {
 		
 		this.frameMoveInit();
 
+	}
+
+	createLoadSpinner()
+	{
+		const overlay = new Graphics();
+		overlay.beginFill(0x000000,0.6);
+		overlay.drawRect(0,0,config.logicalWidth,config.logicalHeight);
+		overlay.endFill();
+		this.addChildToFullScene(overlay);
+
+		let percent = 0;
+		const spinner = new Graphics();
+		spinner.rotation += 0.12;
+		spinner
+		  .clear()
+		  .lineStyle(10, 0xffffff, 1)
+		  .arc(0, 0, 40, 0, Math.PI * 2 * percent, false);
+		percent = Math.abs(Math.sin(Date.now() / 1000));
+
+		spinner.position.set(window.innerWidth/2,window.innerHeight/2);
+		this.addChildToFullScene(spinner);
+	
+		new Tween(spinner)
+		.onUpdate(()=>{
+			if(!Globals.gameApiLoaded)
+				{
+					spinner
+					.clear()
+					.lineStyle(10, 0xffffff, 1)
+					.moveTo(40, 0)
+					.arc(0, 0, 40, 0, Math.PI * 2 * percent, false);
+					percent = Math.abs(Math.sin(Date.now() / 1000));
+				}
+				else
+				{
+					this.removeChildFullScene(overlay);
+					this.removeChildFullScene(spinner);
+				}
+		})
+		.repeat(Infinity)
+		.start();
 
 	}
 	
@@ -43,6 +90,7 @@ export class MainScene extends Scene {
 		this.rightArrow.buttonMode = true;
 		this.rightArrow.on("pointerdown",()=>{
 			this.tweenObj(this.rightArrow);
+			this.gameClassManager.makePageMoveRight(true);
 		});
 
 		this.leftArrow = new Sprite(Globals.resources.Arrow.texture);
@@ -54,6 +102,7 @@ export class MainScene extends Scene {
 		this.leftArrow.buttonMode = true;
 		this.leftArrow.on("pointerdown",()=>{
 			this.tweenObj(this.leftArrow);
+			this.gameClassManager.makePageMoveRight(false);
 		});
 
 		
@@ -70,7 +119,18 @@ export class MainScene extends Scene {
 	}
 
 	recievedMessage(msgType: string, msgParams: any): void {
-	
+		
+		if(msgType == "MoveRight")
+		this.gameClassManager.makePageMoveRight(true);
+		
+		if(msgType == "MoveLeft")
+		this.gameClassManager.makePageMoveRight(false);
+
+		if(msgType == "CallPageInit")
+		{
+			this.gameClassManager = new gameClassManager();
+			this.mainContainer.addChild(this.gameClassManager);
+		}
 	}
 	tweenObj(sprite :Sprite)
 	{

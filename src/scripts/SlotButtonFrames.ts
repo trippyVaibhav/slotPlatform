@@ -23,6 +23,8 @@ export class Frames extends Sprite
 		this.addChild(this.thumbnail);
 		this.thumbnail.anchor.set(0.5);
 		this.thumbnail.scale.set(1);
+		this.thumbnail.width = this.width*1.2;
+        this.thumbnail.height = this.height*1.1;
         
         const FavBtn = new FavButton()
 		this.addChild(FavBtn);
@@ -80,17 +82,15 @@ export class Frames extends Sprite
     {
         let sprite :Sprite;
         if(isHot)
-        {
             sprite = new Sprite(Globals.resources.HOT.texture);
-        }
         else
         sprite = new Sprite(Globals.resources.NEW.texture);
 
         sprite.anchor.set(0.5);
         sprite.position.set(-this.width/2 + sprite.width/2 - 25,-this.height/2 + sprite.height/2 - 25);
-        sprite.scale.set(1);
-        this.addChild(sprite)
 
+
+        this.addChild(sprite)
     }
 }
 
@@ -111,7 +111,6 @@ export class FavButton extends Sprite
 		favHolder.position.x = - favHolder.width/2 + 10;
 		favHolder.interactive = true;
 		favHolder.buttonMode = true;
-
 	
 		const favBtn = this.isFavBtn();
 		favHolder.addChild(favBtn);

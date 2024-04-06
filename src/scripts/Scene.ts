@@ -69,6 +69,7 @@ export abstract class Scene {
         this.sceneContainer.destroy();
     }
 
+ 
     addChildToFullScene(component: DisplayObject) {
         this.sceneContainer.addChild(component);
 
@@ -78,7 +79,11 @@ export abstract class Scene {
     }
 
 
-
+    removeChildFullScene(component: DisplayObject)
+    {
+        this.sceneContainer.removeChild(component)
+    }
+    
     abstract update(dt: number): void;
 
     abstract recievedMessage(msgType: string, msgParams: any): void;

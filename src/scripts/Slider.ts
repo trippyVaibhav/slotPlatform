@@ -5,20 +5,21 @@ import { config } from "./appConfig";
 import { CreateSwitcher as SwitcherManager, Switcher } from "./switchPage";
 import { GameData } from "./apiCalls";
 import { Frames } from "./SlotButtonFrames";
+import { log } from "console";
 
 
 export class gameClassManager extends Container
 {
 	sliderContainer : ButtonSlider[] = [];
-	
+	switchManager : SwitcherManager [] = [];
+	currentGameIndex : number = 0;
 
 	constructor()
 	{
 		super();
 		this.gamePageInit();
-
-	
 	}
+
 	gamePageInit()
 	{
 		let gameData;
@@ -30,19 +31,58 @@ export class gameClassManager extends Container
 		{
 			const slider = new ButtonSlider(gameData[i])
 			this.sliderContainer.push(slider);
+			
+			const switcher = new SwitcherManager(slider.slotPageLength,()=>{this.changePage()});
+			this.switchManager.push(switcher);
+			this.addChild(this.switchManager[i]);
 		}
 		this.sliderContainer.forEach(element => {
 			this.addChild(element)
 		});
-		this.changeGamePage(0);
+		this.changeGame(0);
+	}
+	
+	makePageMoveRight(moveRight : boolean)
+	{
+		let currentPageIndex = -1;
+		if(moveRight)
+		{
+			currentPageIndex = this.switchManager[this.currentGameIndex].currentPage;
+			if(currentPageIndex >= this.switchManager[this.currentGameIndex].switcher.length-1)
+			currentPageIndex = 0;
+			else
+			currentPageIndex++; 
+		}
+		else
+		{
+			currentPageIndex = this.switchManager[ this.currentGameIndex].currentPage;
+			if(currentPageIndex <= 0 )
+			currentPageIndex =  this.switchManager[ this.currentGameIndex].switcher.length-1;
+			else
+			currentPageIndex--; 
+		}
+		this.switchManager[this.currentGameIndex].changePage(currentPageIndex);
 	}
 
-	changeGamePage(index : number)
+	changePage()
 	{
-		this.sliderContainer.forEach(element => {
-			element.visible = false;
-			element.interactive = false;
-		});
+		if(this.switchManager[this.currentGameIndex])
+		this.sliderContainer[this.currentGameIndex].changePage(this.switchManager[this.currentGameIndex].currentPage);
+	}
+	changeGame(index : number)
+	{
+		this.currentGameIndex = index;
+		for(let i = 0; i < this.sliderContainer.length; i++)
+			{
+				this.sliderContainer[i].visible = false;
+				this.sliderContainer[i].interactive = false;
+
+				this.switchManager[i].visible = false;
+				this.switchManager[i].interactive = false;
+			}	
+		
+		this.switchManager[index].visible = true;
+		this.switchManager[index].interactive = true;
 
 		this.sliderContainer[index].visible = true;
 		this.sliderContainer[index].interactive = true;
@@ -51,8 +91,9 @@ export class gameClassManager extends Container
 export class  ButtonSlider extends Container
 {
 	gameButtons : Frames[] = [];
-	switchManager : SwitcherManager;
-	slotIndex : number = 0;
+	slotPageLength : number = 0;
+	currentGamePageIndex : number = 0;
+
 	gameData : GameData[] = [];
 
 	constructor(gameDataInfo : GameData[])
@@ -66,10 +107,13 @@ export class  ButtonSlider extends Container
 		this.createButtons();
 		this.setInteraction();
 
-		this.switchManager = new SwitcherManager(this.slotIndex);
-		this.addChild(this.switchManager);
+		
 	}
-
+	changePage(index : number)
+	{
+		console.log("Change Page Index : " + index);
+		
+	}
 	
 	setInteraction()
 	{
@@ -82,7 +126,6 @@ export class  ButtonSlider extends Container
             gameFrameData.isDragging = true;
             initialPosition = this.position.clone();
             offset = event.data.getLocalPosition(this);
-			console.log("Draggg");
 			currentPos = offset;
         });
 
@@ -91,8 +134,12 @@ export class  ButtonSlider extends Container
             {
                 this.gameButtons.forEach(element => {element.interactive = true;});
                 const newPosition = event.data.getLocalPosition(this.parent)
-                console.log((newPosition.x - currentPos.x));
-                
+				
+				if(newPosition.x - currentPos.x > 0)
+				Globals.emitter?.Call("MoveRight")
+                else
+				Globals.emitter?.Call("MoveLeft")
+
             }
             gameFrameData.isDragging = false;
         
@@ -122,11 +169,28 @@ export class  ButtonSlider extends Container
             {
                 this.gameButtons.forEach(element => {element.interactive = true;});
                 const newPosition = event.data.getLocalPosition(this.parent)
-                console.log((newPosition.x - currentPos.x));
+				if(newPosition.x - currentPos.x > 0)
+				Globals.emitter?.Call("MoveRight")
+                else
+				Globals.emitter?.Call("MoveLeft")
+
                 gameFrameData.isDragging = false;
             }
 
         });
+		this.on("wheel",(event)=>{
+			let currentScrollY = event.deltaY;
+			console.log(event);
+			
+			// Determine scroll direction
+			if (currentScrollY > 0) {
+				// Scrolling down
+				console.log("Scrolling down");
+			} else {
+				// Scrolling up
+				console.log("Scrolling up");
+			}
+		})
 	}
 
 	createButtons()
@@ -150,7 +214,7 @@ export class  ButtonSlider extends Container
 				onSecondSlot = !onSecondSlot;
 				xpos = this.gameButtons[this.gameButtons.length-1].position.x +  button.width*5;
 				canStart = true;
-				this.slotIndex++;
+				this.slotPageLength++;
 			}	
 	
 			if(i%4 == 0 && i!= 0 && !canStart)
