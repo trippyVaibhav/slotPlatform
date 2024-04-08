@@ -9,7 +9,6 @@ export const LoaderConfig = {
     loginBtn : require("../sprites/LoginBtn.png"),
     InputField : require("../sprites/InputField.png"),
     uiSetup : require("../sprites/UI Setup.png"),
-    settingBtn : require("../sprites/settingBtn.png"),
     logo : require("../sprites/Logo.png"),
     avUi : require("../sprites/AvtarUI.png"),
 
@@ -42,6 +41,12 @@ export const LoaderConfig = {
 
     HOT : require("../sprites/Hot.png"),
     NEW : require("../sprites/New.png"),
+
+    shareBtn : require("../sprites/ShareBtn.png"),
+    settingBtn : require("../sprites/SettingBtn.png"),
+    PasswordBtn : require("../sprites/PasswordBtn.png"),
+    AnnouncmentBtn : require("../sprites/AnnouncmentBtn.png"),
+
 
 
 

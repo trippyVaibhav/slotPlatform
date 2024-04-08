@@ -28,12 +28,15 @@ export class CreateSwitcher extends Container
 			xpos += switcherIcon.width*2;
 			this.switcher.push(switcherIcon);
 		}
-		this.changePage(0);
+		// this.changePage(0);
+		this.switcher[this.currentPage].onSwitch(true)
     }
 	
     
     changePage(index : number)
 	{
+		console.log(index);
+		
 		this.currentPage = index;
 		this.callbackfn();
 		
@@ -57,7 +60,7 @@ export class Switcher extends AnimatedSprite
 		const switcherTexture : any = [Globals.resources.switcherOff.texture,Globals.resources.switcherOn.texture];
 		super(switcherTexture);
 		this.anchor.set(0.5);
-		this.scale.set(1.1)
+		this.scale.set(1.5)
 
 		this.callBackFn = callBack;
 
@@ -68,11 +71,9 @@ export class Switcher extends AnimatedSprite
 
 	onSwitch(shouldOn : boolean)
 	{
-		
 		if(shouldOn)
 		this.gotoAndStop(1);
 		else
 		this.gotoAndStop(0);
-
 	}
 }

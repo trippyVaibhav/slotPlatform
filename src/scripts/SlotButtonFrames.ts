@@ -101,7 +101,7 @@ export class FavButton extends Sprite
 	{
 		super(Globals.resources.favHolder.texture);
 		this.anchor.set(0.5);
-		this.interactive = true;
+		// this.interactive = true;
 		
 		const favHolder = new Sprite(Globals.resources.favHolder1.texture);
 		this.addChild(favHolder);
@@ -109,23 +109,25 @@ export class FavButton extends Sprite
 		favHolder.anchor.set(0.5);
 		favHolder.scale.set(0.9);
 		favHolder.position.x = - favHolder.width/2 + 10;
-		favHolder.interactive = true;
-		favHolder.buttonMode = true;
-	
+		
 		const favBtn = this.isFavBtn();
 		favHolder.addChild(favBtn);
-
-		favHolder.on("pointerdown",()=>{
+		favBtn.interactive = true;
+		favBtn.buttonMode = true;
+		
+		let isPointerDown = false
+		favBtn.on("pointerdown",()=>{
 			if(this.isFav)
-			{
-				this.isFav = false;
-				favBtn.gotoAndStop(0);
-			}
-			else
-			{
-				this.isFav = true;
-				favBtn.gotoAndStop(1);
-			}
+				{
+					this.isFav = false;
+					favBtn.gotoAndStop(0);
+				}
+				else
+				{
+					this.isFav = true;
+					favBtn.gotoAndStop(1);
+				}
+
 		})
 	}	
 

@@ -43,6 +43,7 @@ export class MainScene extends Scene {
 		overlay.beginFill(0x000000,0.6);
 		overlay.drawRect(0,0,config.logicalWidth,config.logicalHeight);
 		overlay.endFill();
+		overlay.interactive =true;
 		this.addChildToFullScene(overlay);
 
 		let percent = 0;
@@ -83,7 +84,7 @@ export class MainScene extends Scene {
 	{
 		this.rightArrow = new Sprite(Globals.resources.Arrow.texture);
 		this.rightArrow.anchor.set(1,0.5);
-		this.rightArrow.scale.set(1);
+		this.rightArrow.scale.set(2);
 		this.rightArrow.position.set(config.logicalWidth,config.logicalHeight/2 + this.rightArrow.height/2)
 		this.mainContainer.addChild(this.rightArrow);
 		this.rightArrow.interactive = true;
@@ -95,7 +96,7 @@ export class MainScene extends Scene {
 
 		this.leftArrow = new Sprite(Globals.resources.Arrow.texture);
 		this.leftArrow.anchor.set(0,0.5);
-		this.leftArrow.scale.set(-1);
+		this.leftArrow.scale.set(-2);
 		this.mainContainer.addChild(this.leftArrow);
 		this.leftArrow.position.set(this.leftArrow.width,config.logicalHeight/2 + this.leftArrow.height/2 );
 		this.leftArrow.interactive = true;
@@ -121,10 +122,16 @@ export class MainScene extends Scene {
 	recievedMessage(msgType: string, msgParams: any): void {
 		
 		if(msgType == "MoveRight")
-		this.gameClassManager.makePageMoveRight(true);
+			{
+				console.log("CALLED RIGHT");
+				this.gameClassManager.makePageMoveRight(true);
+			}
 		
 		if(msgType == "MoveLeft")
-		this.gameClassManager.makePageMoveRight(false);
+		{
+			this.gameClassManager.makePageMoveRight(false);
+			console.log("CALLED LEFT");
+		}
 
 		if(msgType == "CallPageInit")
 		{

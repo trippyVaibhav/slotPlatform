@@ -44,29 +44,37 @@ export class gameClassManager extends Container
 	
 	makePageMoveRight(moveRight : boolean)
 	{
-		let currentPageIndex = -1;
+		
+		let currentPageIndex = 0;
+		
 		if(moveRight)
 		{
 			currentPageIndex = this.switchManager[this.currentGameIndex].currentPage;
 			if(currentPageIndex >= this.switchManager[this.currentGameIndex].switcher.length-1)
 			currentPageIndex = 0;
 			else
-			currentPageIndex++; 
+			currentPageIndex++;
 		}
 		else
 		{
+		console.log(this.switchManager[this.currentGameIndex].switcher.length);
+
 			currentPageIndex = this.switchManager[ this.currentGameIndex].currentPage;
 			if(currentPageIndex <= 0 )
 			currentPageIndex =  this.switchManager[ this.currentGameIndex].switcher.length-1;
-			else
+			else 
 			currentPageIndex--; 
 		}
+		console.log("Calledd MOVEEEE",currentPageIndex);
+
 		this.switchManager[this.currentGameIndex].changePage(currentPageIndex);
 	}
 
 	changePage()
 	{
-		if(this.switchManager[this.currentGameIndex])
+		console.log(this.switchManager[this.currentGameIndex].currentPage);
+		
+		if(this.switchManager[ this.currentGameIndex])
 		this.sliderContainer[this.currentGameIndex].changePage(this.switchManager[this.currentGameIndex].currentPage);
 	}
 	changeGame(index : number)
@@ -88,6 +96,7 @@ export class gameClassManager extends Container
 		this.sliderContainer[index].interactive = true;
 	}
 }
+
 export class  ButtonSlider extends Container
 {
 	gameButtons : Frames[] = [];
@@ -102,82 +111,106 @@ export class  ButtonSlider extends Container
 		super();
 
 		this.gameData = gameDataInfo;
-
-		
 		this.createButtons();
 		this.setInteraction();
-
-		
 	}
+
 	changePage(index : number)
 	{
-		console.log("Change Page Index : " + index);
+		console.log(index, this.currentGamePageIndex);
+		console.log(index -this.currentGamePageIndex);
 		
+		let xOffSet =  2900;
+
+		// if(index -this.currentGamePageIndex <0)
+		// xOffSet = (index -this.currentGamePageIndex)*xOffSet;
+		// else
+
+		// console.log(index - this.currentGamePageIndex);
+		
+		xOffSet = (index - this.currentGamePageIndex)*xOffSet;
+	  	
+		new Tween(this.position)
+		.to({x : this.position.x - xOffSet, y: this.position.y},200)
+		.easing(Easing.Cubic.In)
+		.start();
+		this.currentGamePageIndex = index;
 	}
 	
 	setInteraction()
 	{
+		let mouseDown : boolean = false;
         let initialPosition = { x: 0, y: 0 };
         let offset = { x: 0, y: 0 };
 
         this.interactive = true;
         let currentPos : any;
         this.on('pointerdown', (event) => {
-            gameFrameData.isDragging = true;
             initialPosition = this.position.clone();
-            offset = event.data.getLocalPosition(this);
-			currentPos = offset;
+            currentPos = event.data.global;
+			console.log(currentPos);
+		
+			mouseDown = true;
         });
 
         this.on('pointerup', (event) => {
-            if(gameFrameData.isDragging)
+            if(gameFrameData.isDragging && mouseDown)
             {
                 this.gameButtons.forEach(element => {element.interactive = true;});
-                const newPosition = event.data.getLocalPosition(this.parent)
+                let newPosition = event.data.getLocalPosition(this.parent);
+				console.log("In : " + (newPosition.x - currentPos.x));
 				
-				if(newPosition.x - currentPos.x > 0)
+				if( newPosition.x - currentPos.x < -50)
 				Globals.emitter?.Call("MoveRight")
-                else
+					
+				if( newPosition.x -currentPos.x > 50)
 				Globals.emitter?.Call("MoveLeft")
-
+					
+				mouseDown = false;
             }
-            gameFrameData.isDragging = false;
-        
+			gameFrameData.isDragging = false;
         });
 
         this.on('pointermove', (event) => {
+            gameFrameData.isDragging = true;
           
-            if(gameFrameData.isDragging)
+            if(gameFrameData.isDragging && mouseDown)
             {
 
-                if(this.gameButtons[0].interactive)
-                this.gameButtons.forEach(element => {element.interactive = false;});
+            if(this.gameButtons[0].interactive)
+            this.gameButtons.forEach(element => {element.interactive = false;});
             
-            const newPosition = event.data.getLocalPosition(this.parent);
-            let newX = newPosition.x - offset.x;
-            newX = Math.max(-this.width + window.innerWidth, Math.min(0, newX)); // Limit track movement
-            this.position.x = newX;
+            // const newPosition = event.data.getLocalPosition(this.parent);
+			// console.log(newPosition.x);
+			
+            // let newX = newPosition.x - offset.x;
+            // newX = Math.max(-this.width + 1500, Math.min(0, newX)); // Limit track movement
+            // this.position.x = newX;
             
-            // Adjust content position based on track movement
-            const ratio = newX / (this.width - window.innerWidth);
-            this.position.x = this.width/2 * ratio;
+            // // Adjust content position based on track movement
+            // const ratio = newX / (this.width - 1500);
+            // this.position.x = this.width/2 * ratio;
             
         }
         });
 		this.on('pointerout', (event) => {
-            if(gameFrameData.isDragging)
+            if(gameFrameData.isDragging && mouseDown)
             {
                 this.gameButtons.forEach(element => {element.interactive = true;});
-                const newPosition = event.data.getLocalPosition(this.parent)
-				if(newPosition.x - currentPos.x > 0)
-				Globals.emitter?.Call("MoveRight")
-                else
+                let newPosition = event.data.getLocalPosition(this.parent);
+				console.log("Out : " + (newPosition.x - currentPos.x));
+				
+				if(newPosition.x - currentPos.x < -50)
 				Globals.emitter?.Call("MoveLeft")
 
-                gameFrameData.isDragging = false;
-            }
-
+				if(newPosition.x - currentPos.x > 50)
+				Globals.emitter?.Call("MoveRight")
+				
+		}
+		mouseDown = false;
+		gameFrameData.isDragging = false;
         });
+
 		this.on("wheel",(event)=>{
 			let currentScrollY = event.deltaY;
 			console.log(event);
