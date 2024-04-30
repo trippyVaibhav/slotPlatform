@@ -49,7 +49,7 @@ export class App {
 		window.onresize = (e) => {
 			// this.checkIfDeviceRotated();
 
-			// if (this.isDeviceOrientationChanged) {
+			// if (this.isDeviceOrientationyCt
 			// 	// this.isDeviceOrientationChanged = false;
 			// 	document.body.removeChild(this.app.view);
             //     // console.log("Removed Canvas from DOM");

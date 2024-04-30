@@ -44,12 +44,18 @@ enum GameLinks {
 
 export function createiFrame(gameNumber: number)
 {
-  const gameLinks = (GameLinks as any)[`Link${gameNumber}`];
-  const gameLink =  {gameLinks, EnterPage : true};
-  const customEvent = new CustomEvent('onEnter', { detail: gameLink});
   
-  document.dispatchEvent(customEvent);
-  // console.log(customEvent);
+  if(Globals.gameData)
+  {
+     const link = Globals.gameData[0][gameNumber].gameHostLink;
+      const gameLink =  {link, EnterPage : true};
+      const customEvent = new CustomEvent('onEnter', { detail: gameLink});
+      document.dispatchEvent(customEvent);
+      console.log(customEvent);
+  }
+  else
+  console.log("Undefined URL!!!!");
   
+ 
 
 }

@@ -23,8 +23,8 @@ export class Frames extends Sprite
 		this.addChild(this.thumbnail);
 		this.thumbnail.anchor.set(0.5);
 		this.thumbnail.scale.set(1);
-		this.thumbnail.width = this.width*1.2;
-        this.thumbnail.height = this.height*1.1;
+		this.thumbnail.width = this.width*1.15;
+        this.thumbnail.height = this.height*1.15;
         
         const FavBtn = new FavButton()
 		this.addChild(FavBtn);
