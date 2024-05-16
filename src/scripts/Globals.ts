@@ -49,9 +49,9 @@ export function createiFrame(gameNumber: number)
   {
      const link = Globals.gameData[0][gameNumber].gameHostLink;
       const gameLink =  {link, EnterPage : true};
-      const customEvent = new CustomEvent('onEnter', { detail: gameLink});
+      const customEvent = new CustomEvent('onStart', { detail: gameLink});
       document.dispatchEvent(customEvent);
-      console.log(customEvent);
+      // console.log(customEvent);
   }
   else
   console.log("Undefined URL!!!!");

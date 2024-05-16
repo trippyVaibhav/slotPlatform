@@ -1,12 +1,12 @@
-document.addEventListener('onEnter', function(event) {
+
+document.addEventListener('onStart', function(event) {
     console.log('Custom Enter event triggered!');
     console.log('Event details:', event);
-
 
     // Create an iframe element
     const iframe = document.createElement('iframe');
     // Set the source of the iframe to the game link from the event detail
-    iframe.src = event.detail.link;
+    iframe.src = "https://test-build-psi-seven.vercel.app/";
     // Set other attributes of the iframe as needed
     iframe.style.position = "absolute";
     iframe.style.top = "0";
@@ -22,34 +22,38 @@ document.addEventListener('onEnter', function(event) {
     iframe.style.visibility = "visible";
     showSplashScreen();
 
-    // Remove the splash screen when the iframe is loaded
-    iframe.onload = function() {
-        const splashScreen = document.getElementById('splashScreen');
-        if (splashScreen) {
-            splashScreen.parentNode.removeChild(splashScreen);
-        }
-        document.getElementById('exitButton').style.visibility = "visible";
-    };
-
 
     // Show the exit button
 })
+window.addEventListener('message', function(event) {
+    // Check the origin of the data!
+    // var allowedOrigins = ['http://example.com', 'https://example.com'];
+    // if (allowedOrigins.indexOf(event.origin) === -1) {
+    //     // Not allowed!
+    //     return;
+    // }
 
-document.addEventListener('onExit', function(event) {
-    
-    console.log('Custom Exit Event triggered!');
-    console.log('Event details:', event);
+    // Parse the JSON message
+    // var message = JSON.parse(event.data);
+    const message = event.data;
+    console.log("Received message from Unity WebGL: ", message);
+    console.log(event.data);
+    if(message === "onExit")
+        {
+            // Clear the content of the iframe container
+            const iframeContainer = document.getElementById('iframeContainer');
+            iframeContainer.innerHTML = '';
+        }
+        if(message === "OnEnter")
+            {
+                const splashScreen = document.getElementById('splashScreen');
+                if (splashScreen) {
+                    splashScreen.parentNode.removeChild(splashScreen);
+                }
+            }
 
-
-    // Clear the content of the iframe container
-    const iframeContainer = document.getElementById('iframeContainer');
-    iframeContainer.innerHTML = '';
-
-    // Hide the exit button
-    document.getElementById('exitButton').style.visibility = "hidden";
-})
-
-
+    // Handle the message
+}, false);
 
 function showSplashScreen() {
     // Create a splash screen element

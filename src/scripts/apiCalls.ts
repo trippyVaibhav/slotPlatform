@@ -46,6 +46,7 @@ export function fetchDataAndGroup(): Promise<{ [gameName: string]: GameData[][] 
         // Store the filtered data in the Globals object
         // resolve(results);
         Globals.gameData = results;
+        Globals.gameData
         console.log(results);
         Globals.gameApiLoaded =  true;
         Globals.emitter?.Call("CallPageInit");
